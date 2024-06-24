@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import FYP from "./components/FYP";
+import Tiktok from "./components/Tiktok";
+import Layout from "./components/Layout";
+import { BrowserRouter, Routes, Route } from "react-router-dom";  
 
 function App() {
-  const [videosUrl, setVideosUrl] = useState([]);
-
-  useEffect(() => {
-    async function fetchVideos() {
-      const response = await fetch("http://localhost:3000/");
-      const data = await response.json();
-      setVideosUrl(data);
-    }
-
-    fetchVideos();
-  }, []);
-
   return (
-    <div className="flex flex-col justify-center items-center">
-      {videosUrl.map((videoUrl) => {
-        return <video className="h-screen" key={videoUrl} src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/${videoUrl}.mp4`} width="320" controls></video>;
-      })}
-    </div>
+   <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+          <Route index element={<FYP />} />
+          <Route path="videos/:video_id" element={<Tiktok />} />
+      </Route>
+    </Routes>
+   
+   </BrowserRouter> 
   );
 }
 
