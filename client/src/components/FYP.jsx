@@ -18,7 +18,7 @@ const FYP = () => {
     <div className="flex flex-col justify-center items-center">
       {videos.map((video) => {
         return (
-          <Link key={video.video_id} to={{pathname:`/videos/${video.video_url}`}}>
+          <Link key={video.video_id} to={`/videos/${video.video_url}`} state={video} >
             <video
               className="h-screen"
               src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/${video.video_url}.mp4`}
