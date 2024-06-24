@@ -18,12 +18,8 @@ app.use(express.json());
 app.get("/", async (req, res) => {
   // res.json("Hello world");
   const videos = await pool.query("SELECT * FROM videos");
-  const videos_url = [];
-  for (let i = 0; i < videos.rows.length; i++) {
-    videos_url.push(videos.rows[i].video_url);
-  }
-  console.log('videos pushed');
-  res.status(200).json(videos_url)
+  // console.log('videos pushed');
+  res.status(200).json(videos.rows)
 });
 
 //GET: Retrieve specific video
