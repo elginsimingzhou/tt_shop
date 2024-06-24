@@ -1,0 +1,34 @@
+-- CREATE TABLE users (
+--     user_id SERIAL PRIMARY KEY UNIQUE,
+--     username VARCHAR(40) NOT NULL UNIQUE,
+--     email VARCHAR(40)  NOT NULL UNIQUE,
+--     password_hash VARCHAR(40) NOT NULL,
+--     bio TEXT,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- CREATE TABLE videos (
+--     video_id SERIAL PRIMARY KEY UNIQUE,
+--     video_url VARCHAR(255) NOT NULL,
+--     thumbnail_url VARCHAR(255),
+--     title VARCHAR(255),
+--     description TEXT,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     user_id INT NOT NULL REFERENCES users(user_id)
+-- );
+
+-- CREATE TABLE video_likes (
+--     like_id SERIAL PRIMARY KEY,
+--     video_id INT NOT NULL REFERENCES videos(video_id) ON DELETE CASCADE,
+--     user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT unique_video_user_like UNIQUE (video_id, user_id) -- Ensure a user can like a video only once
+-- );
+
+-- CREATE TABLE video_comments (
+--     comment_id SERIAL PRIMARY KEY,
+--     video_id INT NOT NULL REFERENCES videos(video_id) ON DELETE CASCADE,
+--     user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+--     comment_text TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
