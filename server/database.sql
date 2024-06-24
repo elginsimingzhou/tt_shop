@@ -32,3 +32,25 @@
 --     comment_text TEXT NOT NULL,
 --     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 -- );
+
+-- CREATE TABLE shops (
+--     shop_id SERIAL PRIMARY KEY,
+--     title VARCHAR(100) NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     sold_count INT DEFAULT 0,
+--     response_rate INT DEFAULT 0,
+--     shipped_on_time_rate INT DEFAULT 0,
+--     owner_id INT NOT NULL REFERENCES users(user_id)
+-- );
+
+-- CREATE TABLE products (
+--     product_id SERIAL PRIMARY KEY,
+--     shop_id INT NOT NULL REFERENCES shops(shop_id) ON DELETE CASCADE,
+--     title VARCHAR(255) NOT NULL,
+--     description TEXT,
+--     price DECIMAL(10, 2) NOT NULL,
+--     stock INT,
+--     image_url VARCHAR(255),
+--     sold_count INT DEFAULT 0,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
