@@ -15,7 +15,6 @@ function App() {
           <Route path="shops" element={<Shops />} />
       </Route>
     </Routes>
-   
    </BrowserRouter> 
   );
 }
