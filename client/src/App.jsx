@@ -17,7 +17,6 @@ function App() {
           <Route path="products/:product_id" element={<Shop />} />
       </Route>
     </Routes>
-   
    </BrowserRouter> 
   );
 }
