@@ -1,10 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Tiktok from "./Tiktok";
 import ReactLogo from '../assets/react.svg'
 import Box from '@mui/material/Box';
 import { Card, FormControl, Input, InputAdornment, InputLabel, Tab, Tabs} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
+
 
 const Shops = () => {
   //  Store product data
@@ -59,6 +62,19 @@ const Shops = () => {
 
   return (
     <div>
+      {* Welcome to Tiktok shop!
+      {products.map((product) => {
+        return (
+          <Link
+            key={product.product_id}
+            to={`/products/${product.product_id}`}
+            state={product}
+          >
+            <h1>{product.title}</h1>;
+          </Link>
+        );
+      })} *}
+
       {/* Search bar and shopping cart icon */}
       <div className="pt-4 pb-4 flex p-2 space-x-4 items-center">
         <FormControl 
