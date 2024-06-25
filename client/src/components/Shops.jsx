@@ -62,7 +62,7 @@ const Shops = () => {
 
   return (
     <div>
-      {* Welcome to Tiktok shop!
+       {/* Welcome to Tiktok shop!
       {products.map((product) => {
         return (
           <Link
@@ -73,7 +73,7 @@ const Shops = () => {
             <h1>{product.title}</h1>;
           </Link>
         );
-      })} *}
+      })}  */}
 
       {/* Search bar and shopping cart icon */}
       <div className="pt-4 pb-4 flex p-2 space-x-4 items-center">
