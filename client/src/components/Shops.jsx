@@ -1,5 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Tiktok from "./Tiktok";
 
 const Shops = () => {
   const [products, setProducts] = useState([]);
@@ -18,7 +20,15 @@ const Shops = () => {
     <div>
       Welcome to Tiktok shop!
       {products.map((product) => {
-        return <h1>{product.title}</h1>;
+        return (
+          <Link
+            key={product.product_id}
+            to={`/products/${product.product_id}`}
+            state={product}
+          >
+            <h1>{product.title}</h1>;
+          </Link>
+        );
       })}
     </div>
   );
