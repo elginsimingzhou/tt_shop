@@ -68,7 +68,7 @@ const Shops = () => {
           <Link
             key={product.product_id}
             to={`/products/${product.product_id}`}
-            state={product}
+            // state={product}
           >
             <h1>{product.title}</h1>;
           </Link>

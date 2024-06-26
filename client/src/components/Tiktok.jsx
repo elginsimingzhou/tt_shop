@@ -21,7 +21,7 @@ const Tiktok = (props) => {
         src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/${video.video_url}.mp4`}
         width="320"
         controls
-        autoPlay
+        // autoPlay
       ></video>
       <p>
         Data: {JSON.stringify(data.generic_data)}
