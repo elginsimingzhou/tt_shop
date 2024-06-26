@@ -27,7 +27,7 @@ export default function BottomNav() {
         }}
       >
         <Link to="/"><BottomNavigationAction label="Home" icon={<HomeIcon />}/></Link>
-        <Link to='/shops'><BottomNavigationAction label="Shop" icon={<ShoppingBagIcon />}/></Link>
+        <Link to='/products'><BottomNavigationAction label="Shop" icon={<ShoppingBagIcon />}/></Link>
         <BottomNavigationAction label="" icon={<AddIcon/>}/>
         <BottomNavigationAction label="" icon={<ChatBubbleIcon />} />
         <BottomNavigationAction label="" icon={<Person3Icon />} />
