@@ -77,7 +77,9 @@ app.get("/products", async (req, res) => {
 });
 
 //GET: Retrieve specific product resource when loading product page
-app.get("/products/:product_id", (req, res) => {});
+app.get("/products/:product_id", (req, res) => {
+  
+});
 
 app.listen(PORT, () => {
   console.log(`App listening at PORT ${PORT}`);
