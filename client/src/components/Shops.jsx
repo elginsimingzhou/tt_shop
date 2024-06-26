@@ -49,12 +49,24 @@ const Shops = () => {
   useEffect(() => {
     // async function fetchProducts() {
     //   const response = await fetch("http://localhost:3000/products");
-    //   const data = await response.json();
-    //   setProducts(data);
+    //   const fetchedProducts = await response.json();
+    //   setProducts(fetchedProducts);
     // }
     // fetchProducts();
 
     // I will use placeholder data for now.
+    //Example of each product object:
+    //   {
+    //   "product_id": 3,
+    //   "shop_id": 3,
+    //   "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
+    //   "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+    //   "price": "9.50",
+    //   "stock": 76,
+    //   "image_url": "3",
+    //   "sold_count": 0,
+    //   "created_at": "2024-06-25T03:39:34.711Z"
+    // },
     const test = [{title: 'fishing rod'}, {title: 'kettle'}, {title: 'lipstick'}, {title: 'golf stick'}]
     setProducts(test)
 
