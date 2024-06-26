@@ -1,13 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Tiktok from "./Tiktok";
 import ReactLogo from '../assets/react.svg'
 import Box from '@mui/material/Box';
 import { Card, FormControl, Input, InputAdornment, InputLabel, Tab, Tabs} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
-
 
 const Shops = () => {
   //  Store product data
@@ -25,9 +22,9 @@ const Shops = () => {
         id={`simple-tabpanel-${index}`}
         aria-labelledby={`simple-tab-${index}`}
         {...other}
-        className="bg-slate-200"
+        className="bg-slate-100"
       >
-        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
       </div>
     );
   }
@@ -55,25 +52,81 @@ const Shops = () => {
     // fetchProducts();
 
     // I will use placeholder data for now.
-    //Example of each product object:
-    //   {
-    //   "product_id": 3,
-    //   "shop_id": 3,
-    //   "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
-    //   "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //   "price": "9.50",
-    //   "stock": 76,
-    //   "image_url": "3",
-    //   "sold_count": 0,
-    //   "created_at": "2024-06-25T03:39:34.711Z"
-    // },
-    const test = [{title: 'fishing rod'}, {title: 'kettle'}, {title: 'lipstick'}, {title: 'golf stick'}]
+    const test = 
+    [
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "9.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 0,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      },
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "Anime Shirt",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "9.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 1800,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      }, 
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "9.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 0,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      },
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "Anime Shirt",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "12.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 1800,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      },  
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "4.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 0,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      },
+      {
+        "product_id": 3,
+        "shop_id": 3,
+        "title": "Anime Shirt",
+        "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
+        "price": "2.50",
+        "stock": 76,
+        "image_url": "3",
+        "sold_count": 1800,
+        "created_at": "2024-06-25T03:39:34.711Z"
+      },      
+    ]
     setProducts(test)
 
   }, []);
 
   return (
-    <div>
+    <div className="pb-12">
        {/* Welcome to Tiktok shop!
       {products.map((product) => {
         return (
@@ -88,7 +141,7 @@ const Shops = () => {
       })}  */}
 
       {/* Search bar and shopping cart icon */}
-      <div className="pt-4 pb-4 flex p-2 space-x-4 items-center">
+      <div className="pt-4 pb-4 flex p-2 space-x-1 items-center">
         <FormControl 
           variant="standard" 
           sx={{
@@ -104,6 +157,12 @@ const Shops = () => {
               </InputAdornment>
             }
             placeholder="Search"
+            disableUnderline
+            sx={{
+              boxShadow: '1px 4px 10px -6px rgba(0,0,0,0.75)',
+              borderRadius: '10px',
+              padding: '4px',
+            }}
           />
         </FormControl>
         <ShoppingCartIcon
@@ -139,28 +198,36 @@ const Shops = () => {
         {/* NOTE: Only the first tab is populated */}
         <CustomTabPanel value={value} index={0}>
           {/* Cards */}
-          <div className="grid grid-cols-2 auto-rows-max gap-4">
+          <div className="grid grid-cols-2 auto-rows-max gap-2">
             {products.map((product) => {
               return(
-                <div className="bg-white text-black flex-col justify-items-center rounded p-8">
-                  <img src={ReactLogo} alt='placeholder' className="w-16 h-16"/>
-                  <p>{product.title}</p>
+                <div className="bg-white text-black flex-col justify-items-center rounded">
+                  <img src={ReactLogo} alt={product.title} className="w-full h-inherit"/> {/* To change to image url*/}
+                  <div className="p-2">
+                    <p className="truncate text-left">{product.title}</p>
+                    <p className="text-left text-red-500">S$
+                      <span className="text-xl">
+                        {product.price}
+                      </span>
+                    </p>
+                    <p className="text-left text-base text-slate-400">{product.sold_count} sold</p>
+                  </div>
                 </div>
               );
             })}
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Item Two
+          Empty...
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          Item Three
+          Empty...
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-          Item Four
+          Empty...
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-          Item Five
+          Empty...
         </CustomTabPanel>
       </Card>
 
