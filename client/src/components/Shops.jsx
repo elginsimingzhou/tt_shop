@@ -2,10 +2,18 @@ import React from "react";
 import { useEffect, useState } from "react";
 import ReactLogo from '../assets/react.svg'
 import Box from '@mui/material/Box';
-import { Button, Card, FormControl, Input, InputAdornment, Tab, Tabs} from "@mui/material";
+import { Button, Card, FormControl, Input, InputAdornment, Paper, Stack, Tab, Tabs, styled} from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from "react-router-dom";
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import ForumIcon from '@mui/icons-material/Forum';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import HistoryIcon from '@mui/icons-material/History';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PaymentIcon from '@mui/icons-material/Payment';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const Shops = () => {
   //  Store product data
@@ -23,7 +31,7 @@ const Shops = () => {
   };
 
   // OPTIONAL: See if this is necessary.
-  // Function for submission of search
+  // Function for submission of search 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (search.trim()) {
@@ -35,6 +43,16 @@ const Shops = () => {
   const handleProduct = (product_id) => {
     navigate(`/products/:${product_id}`);
   };
+
+  // Item for each type of content
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: '16px',
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    boxShadow: '0 0 0',
+  }));
 
   // Component for each tab (tab content)
   function CustomTabPanel(props) {
@@ -210,6 +228,43 @@ const Shops = () => {
             width:'30px',
             height:'30px',
           }}/>
+      </div>
+
+      <div className="p-2 max-w-prose overflow-x-scroll">
+        <Stack direction="row" spacing={0} >
+          <div>
+            <ListAltIcon/>
+            <Item>Order</Item>
+          </div>
+          <div>
+            <ConfirmationNumberIcon/>
+            <Item>Coupons</Item>
+          </div>
+          <div>
+            <ForumIcon/>
+            <Item>Messages</Item>
+          </div>
+          <div>
+            <BookmarkBorderIcon/>
+            <Item>Favourites</Item>
+          </div>
+          <div>
+            <HistoryIcon/>
+            <Item>History</Item>
+          </div>
+          <div>
+            <LocationOnIcon/>
+            <Item>Address</Item>
+          </div>
+          <div>
+            <PaymentIcon/>
+            <Item>Payment</Item>
+          </div>
+          <div>
+            <HelpOutlineIcon/>
+            <Item>Help</Item>
+          </div>
+        </Stack>
       </div>
 
       {/* Card to hold categories and cards */}
