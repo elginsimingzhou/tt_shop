@@ -6,31 +6,53 @@ const FYP = () => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    async function fetchVideos() {
-      const response = await fetch("http://localhost:3000/");
-      const data = await response.json();
-      setVideos(data);
-    }
+    // async function fetchVideos() {
+    //   const response = await fetch("http://localhost:3000/");
+    //   const data = await response.json();
+    //   setVideos(data);
+    // }
 
-    fetchVideos();
+    // fetchVideos();
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      {videos.map((video) => {
+    <div className="snap-mandatory snap-y bg-black">
+      {/* {videos.map((video) => {
         return (
           <Link key={video.video_id} to={`/videos/${video.video_url}`} state={video} >
-            {/* <video
-              className="h-screen"
-              src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/${video.video_url}.mp4`}
-              width="320"
-              controls
-            ></video>
-            <p>{video.username}</p> */}
             <Tiktok key={video.video_id} video={video}/>
           </Link>
         );
-      })}
+      })} */}
+
+      {/* Testing out with three sample videos first */}
+      {/* TODO: snap scrolling of tiktok videos */}
+      <div className="snap-normal snap-center flex justify-center items-center h-screen pb-6">
+        <video 
+          src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/1.mp4`} 
+          className="snap-normal snap-start w-screen"
+          loop
+          controls
+        ></video>
+      </div>
+      <div className="snap-normal snap-center flex justify-center items-center h-screen pb-6">
+      <video 
+          src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/2.mp4`} 
+          className="snap-normal snap-start w-screen"
+          loop
+          controls
+        ></video>
+      </div>
+      <div className="snap-normal snap-center flex justify-center items-center h-screen pb-6">
+      <video 
+          src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/3.mp4`} 
+          className="snap-normal snap-start w-screen"
+          loop
+          controls
+        ></video>
+      </div>
+
+      {/* <p>{video.username}</p>  */}
     </div>
   );
 };

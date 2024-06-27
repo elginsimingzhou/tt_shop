@@ -20,7 +20,6 @@ export default function BottomNav() {
         right: 0,
     }}>
       <BottomNavigation
-        showLabels
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
