@@ -6,6 +6,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ReactLogo from '../assets/react.svg'
+import LiveTvIcon from '@mui/icons-material/LiveTv';
+import SearchIcon from "@mui/icons-material/Search";
+import { Badge } from "@mui/material";
 
 const FYP = () => {
   const [videos, setVideos] = useState([]);
@@ -69,6 +72,32 @@ const FYP = () => {
     return () => clearTimeout(observerTimeout);
   }, []);
 
+  // Function to handle side buttons click
+  const handleIcon = (id) => {
+    const button = document.getElementById(id);
+    const currentColor = button.style.color;
+
+    if(currentColor == 'white' || currentColor == ""){
+      if(id[0] == 'H'){
+        button.style.color = 'red';
+        // Perform any database changes (both local and cloud)
+      }
+      else if (id[0] == 'B'){
+        button.style.color = 'yellow';
+        // Perform any database changes (both local and cloud)
+      } 
+    }
+    else{
+      button.style.color = 'white';
+    }
+
+    // Animation
+    button.classList.add('animate-click');
+    button.addEventListener('animationend', () => {
+      button.classList.remove('animate-click');
+    }, { once: true });
+  }
+
   return (
     <div className="max-h-screen overflow-y-scroll snap-y snap-mandatory bg-black">
       {videos.map((video, index) => {
@@ -88,17 +117,32 @@ const FYP = () => {
             ></video>
 
             {/* Top Bar */}
+            <div className="absolute top-10 left-0 z-10 text-white">
+              <div className="flex w-screen place-content-around">
+                <div>
+                  <LiveTvIcon/>
+                </div>
+                <div className="flex gap-4">
+                    <p>Friends</p>
+                    <p>Following</p>
+                    <p className="font-bold">For You</p>
+                </div>
+                <div>
+                  <SearchIcon/>
+                </div>
+              </div>
+            </div>
 
             {/* Side buttons */}
             {/* To replace numbers with relevant data */}
-            <div className="absolute top-1/3 right-3 z-10">
+            <div className="absolute top-1/4 right-3 z-10">
               <div className="flex flex-col gap-8 text-white">
                 <div className="relative">
-                    <img src={ReactLogo} alt="logo" className="w-full h-inherit bg-white rounded-full"/> {/* To change to image url*/}
+                    <img src={ReactLogo} alt="logo" className="bg-white rounded-full"/> {/* To change to image url*/}
                     <p className="bg-red-500 absolute top-7 right-2 rounded-full h-5 w-5 flex justify-center items-center">+</p>
                 </div>
                 <div>
-                  <FavoriteIcon fontSize="large"/>
+                  <FavoriteIcon fontSize="large" id={'Heart_'+ index} onClick={() => handleIcon('Heart_'+ index)}/>
                   <p className="text-sm">2000</p>
                 </div>
                 <div>
@@ -106,13 +150,26 @@ const FYP = () => {
                   <p className="text-sm">2000</p>
                 </div>
                 <div>
-                  <BookmarkIcon fontSize="large"/>
+                  <BookmarkIcon fontSize="large" id={'Bookmark_'+ index} onClick={() => handleIcon('Bookmark_'+ index)}/>
                   <p className="text-sm">2000</p>
                 </div>
                 <div>
                   <ReplyIcon fontSize="large"/>
                   <p className="text-sm">2000</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Bottom Bar */}
+            {/* Will have to update this with actual data */}
+            <div className="absolute bottom-20 left-4 z-10 text-white">
+              <div className="flex flex-col text-left">
+                  <div className="font-bold">
+                    The Creator 
+                  </div>
+                  <div className="max-w-64 max-h-12 overflow-y-hidden ellipsis">
+                      This is the caption. This is the caption. This is the caption. This is the caption. This is the caption.
+                  </div>
               </div>
             </div>
         </div>

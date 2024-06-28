@@ -300,7 +300,7 @@ const Shops = () => {
                 <div key={product.product_id} className="bg-white text-black flex-col justify-items-center rounded" onClick={() => handleProduct(product.product_id)}>
                   <img src={ReactLogo} alt={product.title} className="w-full h-inherit"/> {/* To change to image url*/}
                   <div className="p-2">
-                    <p className="truncate text-left">{product.title}</p>
+                    <p className="ellipsis text-left">{product.title}</p>
                     <p className="text-left text-red-500">S$
                       <span className="text-xl">
                         {product.price}
