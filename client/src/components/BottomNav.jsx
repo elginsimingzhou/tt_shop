@@ -54,9 +54,9 @@ export default function BottomNav() {
         />
         {/* Custom styling to the add button for styling purposes */}
         <div className='flex items-center justify-center w-1/5 text-black'>
-          <div className='bg-blue-400 h-1/2 w-2/12 rounded-l-lg -mr-2'></div>
-          <div className='flex justify-center items-center text-black bg-white h-1/2 w-1/2 z-10 rounded-md'><AddIcon/></div>
-          <div className='bg-red-400 h-1/2 w-2/12 rounded-r-lg -ml-2'></div>
+          <div className='bg-blue-400 h-1/2 w-2/12 rounded-l-lg -mr-1'></div>
+          <div className='flex justify-center items-center text-black bg-white h-1/2 w-2/5 z-10 rounded-md'><AddIcon/></div>
+          <div className='bg-red-400 h-1/2 w-2/12 rounded-r-lg -ml-1'></div>
         </div>
         <BottomNavigationAction 
           label="Inbox" 

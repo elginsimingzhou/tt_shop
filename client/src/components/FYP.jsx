@@ -98,6 +98,18 @@ const FYP = () => {
     }, { once: true });
   }
 
+  // Handles video playing on touch
+  const handleVideo= (index) => {
+    const video = videoRefs.current[index];
+    if (video) {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+  };
+
   return (
     <div className="max-h-screen overflow-y-scroll snap-y snap-mandatory bg-black">
       {videos.map((video, index) => {
@@ -106,14 +118,13 @@ const FYP = () => {
           //   <Tiktok key={video.video_id} video={video}/>
           // </Link>
 
-          // To be replaced with <Tiktok/>, will change when everything is done
-          <div key={index} className="w-full h-screen snap-center flex justify-center items-center pb-6 relative">
+          // TODO: To be replaced with <Tiktok/>, will change when everything is done
+          <div key={index} className="w-full h-screen snap-center flex justify-center items-center pb-6 relative" onClick={() => handleVideo(index)}>
             <video 
               src={video.video_url}
               ref={el => (videoRefs.current[index] = el)}
               className="max-w-full max-h-dvh z-0"
               loop
-              controls
             ></video>
 
             {/* Top Bar */}
@@ -134,7 +145,7 @@ const FYP = () => {
             </div>
 
             {/* Side buttons */}
-            {/* To replace numbers with relevant data */}
+            {/* TODO: To replace numbers with relevant data */}
             <div className="absolute top-1/4 right-3 z-10">
               <div className="flex flex-col gap-8 text-white">
                 <div className="relative">
@@ -161,7 +172,7 @@ const FYP = () => {
             </div>
 
             {/* Bottom Bar */}
-            {/* Will have to update this with actual data */}
+            {/* TODO: Will have to update this with actual data */}
             <div className="absolute bottom-20 left-4 z-10 text-white">
               <div className="flex flex-col text-left">
                   <div className="font-bold">
