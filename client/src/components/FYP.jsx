@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Tiktok from "./Tiktok";
+import ReplyIcon from '@mui/icons-material/Reply';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import InsertCommentIcon from '@mui/icons-material/InsertComment';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import ReactLogo from '../assets/react.svg'
 
 const FYP = () => {
   const [videos, setVideos] = useState([]);
@@ -72,16 +77,44 @@ const FYP = () => {
           //   <Tiktok key={video.video_id} video={video}/>
           // </Link>
 
-          // To be replaced with <Tiktok/> but for now, i dont have sample data to play with 
-          <div key={index} className="w-full h-screen snap-center flex justify-center items-center pb-6">
+          // To be replaced with <Tiktok/>, will change when everything is done
+          <div key={index} className="w-full h-screen snap-center flex justify-center items-center pb-6 relative">
             <video 
               src={video.video_url}
               ref={el => (videoRefs.current[index] = el)}
-              className="max-w-full max-h-dvh"
-              autoPlay
+              className="max-w-full max-h-dvh z-0"
               loop
               controls
             ></video>
+
+            {/* Top Bar */}
+
+            {/* Side buttons */}
+            {/* To replace numbers with relevant data */}
+            <div className="absolute top-1/3 right-3 z-10">
+              <div className="flex flex-col gap-8 text-white">
+                <div className="relative">
+                    <img src={ReactLogo} alt="logo" className="w-full h-inherit bg-white rounded-full"/> {/* To change to image url*/}
+                    <p className="bg-red-500 absolute top-7 right-2 rounded-full h-5 w-5 flex justify-center items-center">+</p>
+                </div>
+                <div>
+                  <FavoriteIcon fontSize="large"/>
+                  <p className="text-sm">2000</p>
+                </div>
+                <div>
+                  <InsertCommentIcon fontSize="large"/>
+                  <p className="text-sm">2000</p>
+                </div>
+                <div>
+                  <BookmarkIcon fontSize="large"/>
+                  <p className="text-sm">2000</p>
+                </div>
+                <div>
+                  <ReplyIcon fontSize="large"/>
+                  <p className="text-sm">2000</p>
+                </div>
+              </div>
+            </div>
         </div>
         );
       })}

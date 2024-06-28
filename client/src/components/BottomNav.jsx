@@ -8,10 +8,6 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import Person3Icon from '@mui/icons-material/Person3';
 import { useNavigate } from 'react-router-dom';
-import { Badge } from '@mui/base/Badge';
-import Add from '@mui/icons-material/Add';
-
-
 
 export default function BottomNav() {
   const [value, setValue] = React.useState(0);
@@ -58,9 +54,9 @@ export default function BottomNav() {
         />
         {/* Custom styling to the add button for styling purposes */}
         <div className='flex items-center justify-center w-1/5 text-black'>
-          <div className='bg-blue-400 h-2/3 w-1/12 rounded-l -mr-0.5'></div>
-          <div className='flex justify-center items-center text-black bg-white h-2/3 w-1/2 z-10 rounded'><AddIcon/></div>
-          <div className='bg-red-400 h-2/3 w-1/12 rounded-r -ml-0.5'></div>
+          <div className='bg-blue-400 h-1/2 w-2/12 rounded-l-lg -mr-2'></div>
+          <div className='flex justify-center items-center text-black bg-white h-1/2 w-1/2 z-10 rounded-md'><AddIcon/></div>
+          <div className='bg-red-400 h-1/2 w-2/12 rounded-r-lg -ml-2'></div>
         </div>
         <BottomNavigationAction 
           label="Inbox" 
