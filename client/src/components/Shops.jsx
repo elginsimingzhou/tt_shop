@@ -230,7 +230,8 @@ const Shops = () => {
           }}/>
       </div>
 
-      <div className="p-2 max-w-prose overflow-x-scroll">
+      {/* Different options for styling purposes*/}
+      <div className="p-2 max-w-prose overflow-x-auto">
         <Stack direction="row" spacing={0} >
           <div>
             <ListAltIcon/>
