@@ -33,7 +33,7 @@ const Shops = () => {
 
   // Function for submission of search
   const handleProduct = (product_id) => {
-    navigate(`/products/:${product_id}`);
+    navigate(`/products/${product_id}`);
   };
 
   // Component for each tab (tab content)
