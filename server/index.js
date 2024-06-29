@@ -31,6 +31,18 @@ app.get("/", async (req, res) => {
 app.get("/videos/:video_id", async (req, res) => {
   const { video_id } = req.params;
 
+  const response = await fetch(`${process.env.ML_SERVER_URL}/videos/${video_id}`,
+    {
+      method:'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type' : 'application/json',
+      },
+      body: JSON.stringify({'video_url' : video_id})
+    }
+  )
+  const fetchedKeywords = await response.json()
+
   const generic_data = await pool.query(
       `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.flag_count, 0) as flag_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
       FROM
@@ -65,7 +77,7 @@ app.get("/videos/:video_id", async (req, res) => {
       WHERE video_id = $1`, [video_id]
   )
 
-  res.json({"generic_data": generic_data.rows[0], "comments": comments.rows});
+  res.json({"generic_data": generic_data.rows[0], "comments": comments.rows, "keywords": fetchedKeywords});
 });
 
 //GET: Retrieve all products to load TikTok Shop
