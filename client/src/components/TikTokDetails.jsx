@@ -6,8 +6,6 @@ const TikTokDetails = () => {
   const location = useLocation();
   const video = location.state;
 
-  
-
   return (
     <div>
       <h1>This is tiktok detail page</h1>
