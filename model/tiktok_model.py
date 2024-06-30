@@ -7,8 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1HRrP_eaS16DWnD6_cMh48xIx2bAxmCH0
 """
 
-!pip install pytesseract opencv-python-headless ultralytics nltk scikit-learn rake-nltk
-!sudo apt-get install tesseract-ocr
+# !pip install pytesseract opencv-python-headless ultralytics nltk scikit-learn rake-nltk
+# !sudo apt-get install tesseract-ocr
 
 import cv2
 from ultralytics import YOLO
