@@ -3,8 +3,6 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ReactLogo from '../assets/react.svg'
-import LiveTvIcon from '@mui/icons-material/LiveTv';
-import SearchIcon from "@mui/icons-material/Search";
 import CommentSection from "./CommentSection";
 
 const Tiktok = (props) => {
@@ -106,22 +104,7 @@ const Tiktok = (props) => {
         autoPlay
       ></video>
 
-      {/* Top Bar */}
-      <div className="absolute top-10 left-0 z-10 text-white">
-        <div className="flex w-screen place-content-around">
-          <div>
-            <LiveTvIcon/>
-          </div>
-          <div className="flex gap-4">
-              <p>Friends</p>
-              <p>Following</p>
-              <p className="font-bold">For You</p>
-          </div>
-          <div>
-            <SearchIcon/>
-          </div>
-        </div>
-      </div>
+
 
       {/* Side buttons */}
       {/* TODO: To replace numbers with relevant data */}
