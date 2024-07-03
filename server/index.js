@@ -117,6 +117,72 @@ app.get("/products", async (req, res) => {
   res.status(200).json(products.rows);
 });
 
+app.get("/products", async (req, res) => {
+  try {
+    const user_id = req.query.user_id;
+
+    //retrieve all products
+    const products = await pool.query("SELECT * FROM products");
+
+    //retrieve products liked by the user
+    const likedProducts = await pool.query(
+      `SELECT product_id FROM product_likes WHERE user_id = $1`,
+      [user_id]
+    );
+
+    //retrieve products watched by the user along with the duration
+    const watchedProducts = await pool.query(
+      `SELECT product_id, SUM(duration) as total_duration
+       FROM video_views
+       WHERE user_id = $1
+       GROUP BY product_id`,
+      [user_id]
+    );
+
+    //ceate a ranking map for the products
+    const productRanking = new Map();
+
+    //assign weights based on user interactions. 
+    //watched for 10s or more
+    watchedProducts.rows.forEach((row) => {
+      if (row.total_duration >= 10) {
+        productRanking.set(row.product_id, 1); 
+      }
+    });
+
+    //if the product was both liked and watched for 10s or more
+    likedProducts.rows.forEach((row) => {
+      if (productRanking.has(row.product_id)) {
+        productRanking.set(row.product_id, productRanking.get(row.product_id) + 2);
+      } else {
+        productRanking.set(row.product_id, 2); //weight for liked products
+      }
+    });
+
+    //adjust the ranking for products that meet the highest priority condition
+    watchedProducts.rows.forEach((row) => {
+      if (likedProducts.rows.find((liked) => liked.product_id === row.product_id && row.total_duration >= 10)) {
+        productRanking.set(row.product_id, 3); //highest weight for liked and watched for 10s or more
+      }
+    });
+
+    //sort products based on ranking
+    const rankedProducts = products.rows.sort((a, b) => {
+      const rankA = productRanking.get(a.product_id) || 0;
+      const rankB = productRanking.get(b.product_id) || 0;
+      return rankB - rankA;
+    });
+
+    //select top 5 products based onranking
+    const topProducts = rankedProducts.slice(0, 5);
+
+    res.json(topProducts);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 //GET: Retrieve specific product resource when loading product page
 app.get("/products/:product_id", async (req, res) => {
   const { product_id } = req.params;
