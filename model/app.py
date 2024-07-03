@@ -14,9 +14,9 @@ class Home(Resource):
 class Video(Resource):
     def post(self, video_id):
         args = video_post_args.parse_args()
-        print(args)
+        # print(args)
         video_url = args['video_url']
-        print(video_url)
+        # print(video_url)
 
         #################
         #   Do some ML  #
