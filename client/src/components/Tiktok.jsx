@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReplyIcon from '@mui/icons-material/Reply';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ReactLogo from '../assets/react.svg'
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SearchIcon from "@mui/icons-material/Search";
+import CommentSection from "./CommentSection";
 
 const Tiktok = (props) => {
   const [video, setVideo] = useState(props.video);
@@ -103,6 +103,7 @@ const Tiktok = (props) => {
         ref={el => (videoRefs.current[props.index] = el)}
         className="max-w-full max-h-dvh z-0"
         loop
+        autoPlay
       ></video>
 
       {/* Top Bar */}
@@ -135,7 +136,7 @@ const Tiktok = (props) => {
             <p className="text-sm">2000</p>
           </div>
           <div>
-            <InsertCommentIcon fontSize="large"/>
+            <CommentSection comments={video.comments} id={video.id} />
             <p className="text-sm">2000</p>
           </div>
           <div>
