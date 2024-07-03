@@ -119,64 +119,50 @@ app.get("/products", async (req, res) => {
 
 app.get("/products", async (req, res) => {
   try {
-    const user_id = req.query.user_id;
-
-    //retrieve all products
+    // Fetch all products
     const products = await pool.query("SELECT * FROM products");
 
-    //retrieve products liked by the user
+    // Fetch liked and watched products by the user
     const likedProducts = await pool.query(
-      `SELECT product_id FROM product_likes WHERE user_id = $1`,
+      "SELECT product_id FROM likedProducts WHERE user_id = $1",
       [user_id]
     );
 
-    //retrieve products watched by the user along with the duration
     const watchedProducts = await pool.query(
-      `SELECT product_id, SUM(duration) as total_duration
-       FROM video_views
-       WHERE user_id = $1
-       GROUP BY product_id`,
+      "SELECT product_id FROM watchedProducts WHERE user_id = $1 AND duration >= 10",
       [user_id]
     );
 
-    //ceate a ranking map for the products
-    const productRanking = new Map();
+    
+    if (likedProducts.rows.length === 0 && watchedProducts.rows.length === 0) {
+      const rankedProducts = products.rows.sort((a, b) => b.sold_count - a.sold_count);
+      return res.status(200).json(rankedProducts.slice(0, 5));
+    }
+    else {
+      // Create a ranking map
+      const productRanking = new Map();
 
-    //assign weights based on user interactions. 
-    //watched for 10s or more
-    watchedProducts.rows.forEach((row) => {
-      if (row.total_duration >= 10) {
-        productRanking.set(row.product_id, 1); 
-      }
-    });
+      
+      likedProducts.rows.forEach(row => {
+        productRanking.set(row.product_id, (productRanking.get(row.product_id) || 0) + 2); //liked products increment 2
+      });
 
-    //if the product was both liked and watched for 10s or more
-    likedProducts.rows.forEach((row) => {
-      if (productRanking.has(row.product_id)) {
-        productRanking.set(row.product_id, productRanking.get(row.product_id) + 2);
-      } else {
-        productRanking.set(row.product_id, 2); //weight for liked products
-      }
-    });
+      // Increment ranking for watched products
+      watchedProducts.rows.forEach(row => {
+        productRanking.set(row.product_id, (productRanking.get(row.product_id) || 0) + 1); //liked products increment 1
+      });
 
-    //adjust the ranking for products that meet the highest priority condition
-    watchedProducts.rows.forEach((row) => {
-      if (likedProducts.rows.find((liked) => liked.product_id === row.product_id && row.total_duration >= 10)) {
-        productRanking.set(row.product_id, 3); //highest weight for liked and watched for 10s or more
-      }
-    });
+      // Rank products based on the ranking map
+      const rankedProducts = products.rows.sort((a, b) => {
+        const rankA = productRanking.get(a.product_id) || 0;
+        const rankB = productRanking.get(b.product_id) || 0;
+        return rankB - rankA;
+      });
 
-    //sort products based on ranking
-    const rankedProducts = products.rows.sort((a, b) => {
-      const rankA = productRanking.get(a.product_id) || 0;
-      const rankB = productRanking.get(b.product_id) || 0;
-      return rankB - rankA;
-    });
+      res.status(200).json(rankedProducts.slice(0, 5));
+    }
 
-    //select top 5 products based onranking
-    const topProducts = rankedProducts.slice(0, 5);
 
-    res.json(topProducts);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Internal server error' });
