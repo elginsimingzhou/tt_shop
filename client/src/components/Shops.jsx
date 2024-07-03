@@ -178,7 +178,7 @@ const Shops = () => {
   }, []);
 
   return (
-    <div className="pb-12">
+    <div className="pb-12 bg-white text-black">
       {/* Welcome to Tiktok shop!
       {products.map((product) => {
         return (

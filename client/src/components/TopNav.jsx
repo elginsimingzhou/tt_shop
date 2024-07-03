@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const TopNav = () => {
   return (
-    <div className="absolute top-4 left-0 z-10 text-white">
+    <div className="absolute top-8 left-0 z-10 text-white">
       <div className="flex items-center w-screen place-content-around">
         <div>
           <LiveTvIcon />
