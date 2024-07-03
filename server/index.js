@@ -47,7 +47,7 @@ app.get("/", async (req, res) => {
   res.status(200).json(videos.rows);
 });
 
-//GET: Retrieve specific video and relevant user information, comments, likes,saves, flags
+//GET: Retrieve specific video and relevant user information, comments, likes,saves, stars
 app.get("/videos/:video_id", async (req, res) => {
   const { video_id } = req.params;
 
@@ -68,15 +68,15 @@ app.get("/videos/:video_id", async (req, res) => {
   });
 
   const generic_data = await pool.query(
-    `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.flag_count, 0) as flag_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
+    `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.star_count, 0) as star_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
       FROM
           (SELECT video_id, COUNT(like_id) AS like_count
           FROM video_likes
           WHERE video_id = $1
           GROUP BY video_id) AS vl
       LEFT JOIN
-          (SELECT video_id, COUNT(flag_id) AS flag_count
-          FROM video_flags
+          (SELECT video_id, COUNT(star_id) AS star_count
+          FROM video_stars
           WHERE video_id = $1
           GROUP BY video_id) AS vf
       ON vl.video_id = vf.video_id
@@ -96,9 +96,11 @@ app.get("/videos/:video_id", async (req, res) => {
   );
 
   const comments = await pool.query(
-    `SELECT comment_text
+    `SELECT username, comment_text
       FROM video_comments
-      WHERE video_id = $1`,
+      INNER JOIN users ON video_comments.user_id = users.user_id
+      WHERE video_id = $1
+      `,
     [video_id]
   );
 

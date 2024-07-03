@@ -9,67 +9,67 @@ const FYP = () => {
     async function fetchVideos() {
       const response = await fetch("http://localhost:3000/");
       const data = await response.json();
-      {console.log(data)}
+      // {console.log(data)}
       setVideos(data);
     }
 
     fetchVideos();
     // Sample data
-    const test = 
-    [
-      {
-        "username": "Creator1",
-        "video_id": "123",
-        "data":"some random caption blablablablabla 1",
-        "video_url":`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/1.mp4`,
-        "comments":
-        [
-          {
-            "username": "User1",
-            "comment" : "Nice"
-          },
-          {
-            "username": "User2", 
-            "comment" : "Bad"
-          }
-        ]
-      },
-      {
-        "username": "Creator2",
-        "video_id": "456",
-        "data":"some random caption blablablablabla 2",
-        "video_url":`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/2.mp4`,
-        "comments":
-        [
-          {
-            "username": "User3",
-            "comment" : "Nice"
-          },
-          {
-            "username": "User4", 
-            "comment" : "Bad"
-          }
-        ]
-      },
-      {
-        "username": "Creator3",
-        "video_id": "789",
-        "data":"some random caption blablablablabla 3",
-        "video_url":`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/3.mp4`,
-        "comments": 
-        [
-          {
-            "username": "User5",
-            "comment" : "Nice"
-          },
-          {
-            "username": "User6", 
-            "comment" : "Bad"
-          }
-        ]
-      },
-    ];
-    setVideos(test);
+    // const test = 
+    //     [
+    //   {
+    //     "video_id": 2,
+    //     "video_url": "2",
+    //     "thumbnail_url": null,
+    //     "title": "Waterbottles review! (2024)",
+    //     "description": "Stay till the end to find our my favourite water bottle.\n#hydroflask #stanley #waterbottle #chilleddrinks",
+    //     "created_at": "2024-06-24T05:06:04.318Z",
+    //     "user_id": 1,
+    //     "username": "elgin"
+    //   },
+    //   {
+    //     "video_id": 1,
+    //     "video_url": "1",
+    //     "thumbnail_url": null,
+    //     "title": "My new favourite powerbank!",
+    //     "description": "30000wAh! Portable! I love it!\n#powerbank #portable #fastcharging",
+    //     "created_at": "2024-06-24T05:04:07.024Z",
+    //     "user_id": 1,
+    //     "username": "elgin"
+    //   },
+    //   {
+    //     "video_id": 3,
+    //     "video_url": "3",
+    //     "thumbnail_url": null,
+    //     "title": "Funko Pop figurine unboxing!",
+    //     "description": "Join me to unbox the ultra big funko pop!\n#funkopop #michaelmyers #chucky #halloween",
+    //     "created_at": "2024-06-24T05:08:12.744Z",
+    //     "user_id": 2,
+    //     "username": "minze"
+    //   },
+    //   {
+    //     "video_id": 5,
+    //     "video_url": "5",
+    //     "thumbnail_url": null,
+    //     "title": "Try out the famous *THERMAL BRUSH*",
+    //     "description": "Definitely, bringing the brush to my mexico trip :P\n#thermalbrush #girls #haircare #hair",
+    //     "created_at": "2024-06-24T05:11:13.982Z",
+    //     "user_id": 3,
+    //     "username": "yonghui"
+    //   },
+    //   {
+    //     "video_id": 4,
+    //     "video_url": "4",
+    //     "thumbnail_url": null,
+    //     "title": "Chocolate bucket taste test!!!",
+    //     "description": "#chocolate #bucket #maltese #sweettreats",
+    //     "created_at": "2024-06-24T05:09:34.680Z",
+    //     "user_id": 3,
+    //     "username": "yonghui"
+    //   }
+    // ]
+   
+    // setVideos(test);
   }, []);
 
   return (
