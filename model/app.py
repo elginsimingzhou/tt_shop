@@ -35,7 +35,7 @@ def download_video(url, file_path):
     else:
         raise Exception(f"Failed to download video from {url}")
 
-def extract_frames(video_path, num_frames=50):
+def extract_frames(video_path, num_frames=20):
     cap = cv2.VideoCapture(video_path)
     frames = []
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -102,8 +102,9 @@ def process_video(video_path):
     text_detections = extract_text(frames)
     all_text = ' '.join(object_detections + text_detections)
     keywords_tfidf = extract_keywords_tfidf([all_text])
-    top_2_keywords = keywords_tfidf[:2]
-    return top_2_keywords   
+    filtered_keywords = [keyword for keyword in keywords_tfidf if keyword.lower() != 'tiktok']
+    top_5_keywords = filtered_keywords[:5]
+    return top_5_keywords   
 
 class Home(Resource):
     def get(self):
