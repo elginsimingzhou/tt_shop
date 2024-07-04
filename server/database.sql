@@ -33,8 +33,18 @@
 --     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 -- );
 
--- CREATE TABLE video_flags (
---     flag_id SERIAL PRIMARY KEY,
+-- CREATE TABLE video_views (
+--     view_id SERIAL PRIMARY KEY,
+--     video_id INT NOT NULL REFERENCES videos(video_id) ON DELETE CASCADE,
+--     user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+--     product_id INT
+--     duration INT DEFAULT 0,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT unique_video_user_view UNIQUE (video_id, user_id) -- Ensure a user can like a video only once
+-- );
+
+-- CREATE TABLE video_stars (
+--     star_id SERIAL PRIMARY KEY,
 --     video_id INT NOT NULL REFERENCES videos(video_id) ON DELETE CASCADE,
 --     product_id INT NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
 --     user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,

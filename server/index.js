@@ -28,9 +28,8 @@ const getOrSetCache = async (key, cb) => {
     const freshData = await cb();
     await client.set(key, JSON.stringify(freshData));
     return freshData;
-
   } catch (err) {
-    console.error('Redis error:', err);
+    console.error("Redis error:", err);
     throw err;
   }
 };
@@ -51,21 +50,24 @@ app.get("/", async (req, res) => {
 app.get("/videos/:video_id", async (req, res) => {
   const { video_id } = req.params;
 
-  const fetchedKeywords = await getOrSetCache(`keywords/${video_id}`, async () => {
-    const response = await fetch(
-      `${process.env.ML_SERVER_URL}/videos/${video_id}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ video_url: video_id }),
-      }
-    );
-    const fetchedKeywords = await response.json();
-    return fetchedKeywords;
-  });
+  const fetchedKeywords = await getOrSetCache(
+    `keywords/${video_id}`,
+    async () => {
+      const response = await fetch(
+        `${process.env.ML_SERVER_URL}/videos/${video_id}`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ video_url: video_id }),
+        }
+      );
+      const fetchedKeywords = await response.json();
+      return fetchedKeywords;
+    }
+  );
 
   const generic_data = await pool.query(
     `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.star_count, 0) as star_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
@@ -105,69 +107,129 @@ app.get("/videos/:video_id", async (req, res) => {
   );
 
   res.json({
-    "generic_data": generic_data.rows[0],
-    "comments": comments.rows,
-    "keywords": fetchedKeywords,
+    generic_data: generic_data.rows[0],
+    comments: comments.rows,
+    keywords: fetchedKeywords,
   });
 });
 
 //GET: Retrieve all products to load TikTok Shop
 //Contain recommender system logic
-app.get("/products", async (req, res) => {
-  const products = await pool.query("SELECT * FROM products");
-  // console.log('videos pushed');
-  res.status(200).json(products.rows);
-});
+// app.get("/products", async (req, res) => {
+//   const products = await pool.query("SELECT * FROM products");
+//   // console.log('videos pushed');
+//   res.status(200).json(products.rows);
+// });
 
 app.get("/products", async (req, res) => {
   try {
-    // Fetch all products
-    const products = await pool.query("SELECT * FROM products");
+    //Get user_id HARDCODED
+    const user_id = 1;
 
-    // Fetch liked and watched products by the user
-    const likedProducts = await pool.query(
-      "SELECT product_id FROM likedProducts WHERE user_id = $1",
+    //Fetch stared products
+    const starProducts = await pool.query(
+      `select star_products.*, avg_rating
+        from (
+            select products.product_id, title, price, stock, sold_count, image_url, shop_id, video_id, user_id
+            from products
+            inner join video_stars on products.product_id = video_stars.product_id
+            where video_stars.user_id = $1) as star_products
+        left join (
+        select product_id, cast(avg(rating) as decimal(2)) as avg_rating
+        from product_ratings
+        group by product_id	) as product_rating
+        on star_products.product_id = product_rating.product_id
+	;`,
       [user_id]
     );
 
+    //Fetch watched products
     const watchedProducts = await pool.query(
-      "SELECT product_id FROM watchedProducts WHERE user_id = $1 AND duration >= 10",
+      `SELECT watched_products.*, avg_rating
+       FROM (SELECT products.product_id, title, price, stock, sold_count, image_url, shop_id, video_id, user_id, duration
+                FROM products
+                INNER JOIN video_views
+                ON products.product_id = video_views.product_id
+                WHERE video_views.user_id = $1 and video_views.product_id not in (
+                  select product_id
+                  from video_stars
+                  where video_stars.user_id = $1
+                )) AS watched_products
+        LEFT JOIN (SELECT product_id, CAST(Avg(rating) AS DECIMAL(2)) AS avg_rating
+                    FROM product_ratings
+                    GROUP BY product_id) AS product_rating
+        ON watched_products.product_id = product_rating.product_id
+        ORDER BY duration DESC; `,
       [user_id]
     );
 
     
-    if (likedProducts.rows.length === 0 && watchedProducts.rows.length === 0) {
-      const rankedProducts = products.rows.sort((a, b) => b.sold_count - a.sold_count);
-      return res.status(200).json(rankedProducts.slice(0, 5));
-    }
-    else {
-      // Create a ranking map
-      const productRanking = new Map();
 
-      
-      likedProducts.rows.forEach(row => {
-        productRanking.set(row.product_id, (productRanking.get(row.product_id) || 0) + 2); //liked products increment 2
-      });
-
-      // Increment ranking for watched products
-      watchedProducts.rows.forEach(row => {
-        productRanking.set(row.product_id, (productRanking.get(row.product_id) || 0) + 1); //liked products increment 1
-      });
-
-      // Rank products based on the ranking map
-      const rankedProducts = products.rows.sort((a, b) => {
-        const rankA = productRanking.get(a.product_id) || 0;
-        const rankB = productRanking.get(b.product_id) || 0;
-        return rankB - rankA;
-      });
-
-      res.status(200).json(rankedProducts.slice(0, 5));
-    }
+    // Fetch rest products
+    const remainingProducts = await pool.query(
+      `
+       select remaining_products.*, avg_rating 
+        from (select *
+        from products
+        where products.product_id not in (
+          select product_id
+          from video_stars
+          where user_id = $1
+          UNION
+          select product_id
+          from video_views
+          where user_id = $1
+        )) as remaining_products
+        left join (
+          select product_id, cast(avg(rating) as decimal(2)) as avg_rating
+          from product_ratings
+          group by product_id	) as product_rating
+        on remaining_products.product_id = product_rating.product_id
+        order by avg_rating desc NULLS LAST, sold_count desc;;
+      `,
+      [user_id]
+  );
 
 
+
+    res.status(201).json({"star_products": starProducts.rows, "watched_products": watchedProducts.rows, "remaining_products": remainingProducts.rows})
+
+    // if (starProducts.rows.length === 0 && watchedProducts.rows.length === 0) {
+    //   const rankedProducts = products.rows.sort(
+    //     (a, b) => b.sold_count - a.sold_count
+    //   );
+    //   return res.status(200).json(rankedProducts.slice(0, 5));
+    // } else {
+    //   // Create a ranking map
+    //   const productRanking = new Map();
+
+    //   likedProducts.rows.forEach((row) => {
+    //     productRanking.set(
+    //       row.product_id,
+    //       (productRanking.get(row.product_id) || 0) + 2
+    //     ); //liked products increment 2
+    //   });
+
+    //   // Increment ranking for watched products
+    //   watchedProducts.rows.forEach((row) => {
+    //     productRanking.set(
+    //       row.product_id,
+    //       (productRanking.get(row.product_id) || 0) + 1
+    //     ); //liked products increment 1
+    //   });
+
+    //   // Rank products based on the ranking map
+    //   const rankedProducts = products.rows.sort((a, b) => {
+    //     const rankA = productRanking.get(a.product_id) || 0;
+    //     const rankB = productRanking.get(b.product_id) || 0;
+    //     return rankB - rankA;
+    //   });
+
+    //   res.status(200).json(rankedProducts.slice(0, 5));
+    // }
   } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
