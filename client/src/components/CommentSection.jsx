@@ -14,6 +14,7 @@ const CommentSection = (props) => {
   
     return(
         <div>
+            
             <div onClick={() => toggleDrawer(true)} key={id}>
                 <InsertCommentIcon fontSize="large"/>
             </div>

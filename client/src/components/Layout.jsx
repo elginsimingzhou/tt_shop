@@ -3,7 +3,7 @@ import BottomNav from "./BottomNav";
 
 const Layout = () => {
   return (
-    <div className="h-screen w-screen bg-white">
+    <div className="h-screen w-screen">
       <Outlet/>
       <BottomNav/>
     </div>
