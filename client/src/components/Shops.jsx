@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ForumIcon from "@mui/icons-material/Forum";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
@@ -25,15 +24,17 @@ import HistoryIcon from "@mui/icons-material/History";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PaymentIcon from "@mui/icons-material/Payment";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ShopCardComponent from "./ShopCardComponent";
 
 const Shops = () => {
   //  Store product data
-  const [products, setProducts] = useState([]);
+  const [staredProducts, setStaredProducts] = useState([]);
+  const [watchedProducts, setWatchedProducts] = useState([]);
+  const [remainingProducts, setRemainingProducts] = useState([]);
   // Store current tab value
   const [value, setValue] = React.useState(0);
   // Store search
   const [search, setSearch] = React.useState("");
-  const navigate = useNavigate();
 
   // Function for search
   const handleSearch = (event) => {
@@ -49,10 +50,7 @@ const Shops = () => {
     }
   };
 
-  // Function for submission of search
-  const handleProduct = (product_id) => {
-    navigate(`/products/${product_id}`);
-  };
+
 
   // Item for each type of content
   const Item = styled(Paper)(({ theme }) => ({
@@ -97,10 +95,111 @@ const Shops = () => {
 
   // Fetch product data
   useEffect(() => {
+    //Sample data
+//     const test = {
+//   "star_products": [
+//     {
+//       "product_id": 4,
+//       "title": "Mylikes mini bi Chocolate Candy Bucket 128gr",
+//       "price": "7.09",
+//       "stock": 129,
+//       "sold_count": 0,
+//       "image_url": "4",
+//       "shop_id": 1,
+//       "video_id": 1,
+//       "user_id": 1,
+//       "avg_rating": "3"
+//     }
+//   ],
+//   "watched_products": [
+//     {
+//       "product_id": 1,
+//       "title": "Hydroflask Water Bottle 32oz Hydro flask Thermos Flask Vacuum Flask Stainless Steel Thermal Tumbler",
+//       "price": "16.90",
+//       "stock": 30,
+//       "sold_count": 0,
+//       "image_url": "1",
+//       "shop_id": 1,
+//       "video_id": 1,
+//       "user_id": 1,
+//       "duration": 10,
+//       "avg_rating": "4"
+//     },
+//     {
+//       "product_id": 2,
+//       "title": "Hot Air Brush, Hair Brush Dryer Styler, 3 in 1 Electric Negative Ion Hair Dryers, Curler Straightener",
+//       "price": "18.81",
+//       "stock": 76,
+//       "sold_count": 0,
+//       "image_url": "2",
+//       "shop_id": 2,
+//       "video_id": 2,
+//       "user_id": 1,
+//       "duration": 5,
+//       "avg_rating": "5"
+//     },
+//     {
+//       "product_id": 3,
+//       "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
+//       "price": "9.50",
+//       "stock": 76,
+//       "sold_count": 0,
+//       "image_url": "3",
+//       "shop_id": 3,
+//       "video_id": 3,
+//       "user_id": 1,
+//       "duration": 3,
+//       "avg_rating": "4"
+//     },
+//     {
+//       "product_id": 5,
+//       "title": "Funko Pop Pokemon - Pokémon Pikachu Squirtle Bulbasaur Esquirtle Charizard Charmander Vulpix Flareon Mewtwo Eevee Dragonite",
+//       "price": "13.46",
+//       "stock": 129,
+//       "sold_count": 0,
+//       "image_url": "5",
+//       "shop_id": 2,
+//       "video_id": 5,
+//       "user_id": 1,
+//       "duration": 2,
+//       "avg_rating": "4"
+//     }
+//   ],
+//   "remaining_products": [
+//     {
+//       "product_id": 7,
+//       "shop_id": 1,
+//       "title": "Cute Decompression Sanrio Toy Vent Pinch Music Slow Rebound Little Milk Dragon Decompression Doll Small Gift Ornaments",
+//       "description": "Origin: China\n\n3c Configuration Category: Toys Over 14 Years Old\n\nToy Material: PVC\n\nColor: Sanrio Series - Kate Cat, Sanrio Series - Kulome, Sanrio Series - Melody, Sanrio Series - Pudding Dog, Sanrio Series - Yugui Dog Spongebob Squarepants Pie Star\n\nWhether It Is Exclusively For Foreign Trade: No\n\nApplicable Age: Youth (15-35 Years Old)",
+//       "price": "1.92",
+//       "stock": 9000,
+//       "image_url": "7",
+//       "sold_count": 10,
+//       "created_at": "2024-07-04T05:18:40.122Z",
+//       "avg_rating": "5"
+//     },
+//     {
+//       "product_id": 6,
+//       "shop_id": 3,
+//       "title": "Stanley 40oz/1.1L Quengher H2.0 Tumbler With Handle With Straw Lids Stainless Steel Coffee Termos Cup Car Mugs vacuum cup",
+//       "description": "Constructed of recycled stainless steel for sustainable sipping, our 40 oz Quencher H2.0 offers maximum hydration with fewer refills. Commuting, studio workouts, day trips or your front porch—you’ll want this tumbler by your side. Thanks to Stanley’s vacuum insulation, your water will stay ice-cold, hour after hour. The advanced FlowState™ lid features a rotating cover with three positions: a straw opening designed to resist splashes while holding the reusable straw in place, a drink opening, and a full-cover top. The ergonomic handle includes comfort-grip inserts for easy carrying, and the narrow base fits just about any car cup holder.",
+//       "price": "38.79",
+//       "stock": 9322,
+//       "image_url": "6",
+//       "sold_count": 20,
+//       "created_at": "2024-07-04T04:58:10.907Z",
+//       "avg_rating": null
+//     }
+//   ]
+// }
+
     async function fetchProducts() {
       const response = await fetch("http://localhost:3000/products");
       const fetchedProducts = await response.json();
-      setProducts(fetchedProducts);
+      setStaredProducts(fetchedProducts.star_products);
+      setWatchedProducts(fetchedProducts.watched_products);
+      setRemainingProducts(fetchedProducts.remaining_products);
+      console.log(JSON.stringify(fetchedProducts));
     }
     fetchProducts();
 
@@ -308,33 +407,28 @@ const Shops = () => {
         <CustomTabPanel value={value} index={0}>
           {/* Cards */}
           <div className="grid grid-cols-2 auto-rows-max gap-2">
-            {products.length !== 0 ? (
-              products.map((product) => {
+            {staredProducts.length !== 0 ? (
+              staredProducts.map((product) => {
                 return (
-                  <div
-                    key={product.product_id}
-                    className="bg-white text-black flex-col justify-items-center rounded"
-                    onClick={() => handleProduct(product.product_id)}
-                  >
-                    <img
-                      src={`${
-                        import.meta.env.VITE_AWSCLOUDFRONT_PRODUCT_URL
-                      }/products/${product.image_url}.jpg`}
-                      alt={product.title}
-                      className="w-full h-inherit"
-                    />{" "}
-                    {/* To change to image url*/}
-                    <div className="p-2">
-                      <p className="ellipsis text-left">{product.title}</p>
-                      <p className="text-left text-red-500">
-                        S$
-                        <span className="text-xl">{product.price}</span>
-                      </p>
-                      <p className="text-left text-base text-slate-400">
-                        {product.sold_count} sold
-                      </p>
-                    </div>
-                  </div>
+                  <ShopCardComponent key={product.product_id} product={product} />
+                );
+              })
+            ) : (
+              <p>Loading products...</p>
+            )}
+            {watchedProducts.length !== 0 ? (
+              watchedProducts.map((product) => {
+                return (
+                  <ShopCardComponent key={product.product_id} product={product} />
+                );
+              })
+            ) : (
+              <p>Loading products...</p>
+            )}
+            {remainingProducts.length !== 0 ? (
+              remainingProducts.map((product) => {
+                return (
+                  <ShopCardComponent key={product.product_id} product={product} />
                 );
               })
             ) : (
