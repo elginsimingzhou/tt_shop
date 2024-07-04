@@ -1,7 +1,5 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
-from flask import Flask
-from flask_restful import Api, Resource, reqparse
 import os
 import requests
 import cv2
