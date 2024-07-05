@@ -6,7 +6,7 @@ import CommentSection from "./CommentSection";
 import StarIcon from "@mui/icons-material/Star";
 import Recommended from "./Recommended";
 
-const Tiktok = ({vid, idx, onPause, onEnd}) => {
+const Tiktok = ({ vid, idx, onPause, onEnd }) => {
   // Stores video
   const [video, setVideo] = useState(vid);
   // Stores miscellaneous data of video
@@ -26,68 +26,20 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
   const [animate, setAnimate] = useState(false);
   // Remember the start time
   const [startTime, setStartTime] = useState(0);
-  
+
   //For showing product when user click on "Star" icon
-  const productData = 
-  {
-    "product_info": {
-      "product_id": 1,
-      "shop_id": 1,
-      "product_title": "Hydroflask Water Bottle 32oz Hydro flask Thermos Flask Vacuum Flask Stainless Steel Thermal Tumbler",
-      "product_description": "The best choice for buying water bottle !!!\n\n*Note: Hydroflask has no anti -condensation coating\n\n\n\nFeatures\n\n● This insulated water bottle is dishwasher safe!\n\n● This bottles keep the coldest drinks icy cold and hot drinks piping hot for hours!\n\n● Reusable water bottle is BPA-free, phthalate-free, and made of stainless steel!\n\n● Fits car bottle holders!\n\n\n\n\n\nDetails\n\n● Capacity: 32oz（946ml）\n\n● Wide mouth opening\n\n● Constructed with 18/8 pro stainless steel\n\n● Odor- and bacteria-resistant\n\n● 100% recyclable\n\n● Convenient carry\n\n● Double wall vacuum insulation keeps hot beverages hot up to 12 hours and cold drinks refreshing for 24 hours\n\n\n\nNote:\n\nAs the lighting effects, the color of objects maybe a little different from pictures",
-      "price": "16.90",
-      "stock": 30,
-      "image_url": "1",
-      "product_sold_count": 0,
-      "shop_title": "hydro_flask.sg",
-      "shop_sold_count": 0,
-      "response_rate": 0,
-      "shipped_on_time_rate": 0
-    },
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(
+        `http://localhost:3000/videos/${video.video_id}`
+      );
+      const fetchedData = await response.json();
+      setData(fetchedData);
+    }
+    fetchData();
+  }, [data]);
 
   useEffect(() => {
-    // async function fetchData() {
-    //   const response = await fetch(
-    //     `http://localhost:3000/videos/${video.video_id}`
-    //   );
-    //   const fetchedData = await response.json();
-    //   setData(fetchedData);
-    // }
-    // fetchData();
-
-    // Sample data
-    const test = {
-      "generic_data": {
-        "video_id": 1,
-        "like_count": "3",
-        "star_count": "1",
-        "comment_count": "2",
-        "save_count": "1"
-      },
-      "comments": [
-        {
-          "username": "minze",
-          "comment_text": "Amazing video!!!"
-        },
-        {
-          "username": "yonghui",
-          "comment_text": "Love your items!"
-        }
-      ],
-      "keywords": {
-        "video_id": 1,
-        "keywords": [
-          "hair curler",
-          "haircare",
-          "women",
-          "curls",
-          "airwrap"
-        ]
-      }
-    }
-    setData(test);
-
     // Checks whether video is on screen, otherwise pauses it
     const observer = new IntersectionObserver(
       (entries) => {
@@ -130,9 +82,23 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
   }, []);
 
   // Runs parent function to update all video watch time array when video ends
-  const handleVideoEnd = () => {
-    console.log("Video end")
+  const handleVideoEnd = async () => {
+    console.log("Video end");
     setIsPlaying(false);
+    console.log(currentTime - startTime);
+
+    await fetch(`http://localhost:3000/videos/${video.video_id}/view`, {
+      method: "PUT",
+      body: JSON.stringify({
+        video_id: video.video_id,
+        user_id: 1, //hard-coded
+        duration: currentTime - startTime,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     onEnd(currentTime);
     setStartTime(0);
     videoRef.current.play();
@@ -140,11 +106,24 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
   };
 
   // Runs parent function to update all video watch time array when video pauses
-  const handleVideoPause = () => {
-    console.log("Video paused")
+  const handleVideoPause = async () => {
+    console.log("Video paused");
     setIsPlaying(false);
     onPause(currentTime - startTime);
-    console.log(currentTime - startTime)
+    console.log(currentTime - startTime);
+    if (currentTime - startTime > 1) {
+      await fetch(`http://localhost:3000/videos/${video.video_id}/view`, {
+        method: "PUT",
+        body: JSON.stringify({
+          video_id: video.video_id,
+          user_id: 1, //hard-coded
+          duration: currentTime - startTime,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   };
 
   // Function to handle side buttons click
@@ -164,7 +143,6 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
         button.style.color = "gold";
         // Perform any database changes (both local and cloud)
       }
-
     } else {
       button.style.color = "white";
     }
@@ -181,17 +159,17 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
   };
 
   // Handles starring the product
-  const handleStar = (e, id) => {
+  const handleStar = async (e, id) => {
     handleIcon(e, id);
-    setStar(!star) // Toggle starred value
-    // Perform relevant database changes after starring video
+    setStar(!star); // Toggle starred value
 
-    
     // We only show recommended product if star button is activated
-    if (star == false){
-      setRecommended(true);
+    if (star == false) {
+      if (data.matched_product) {
+        setRecommended(true);
+      }
       setAnimate(true);
-  
+
       setTimeout(() => {
         setAnimate(false);
         setTimeout(() => {
@@ -199,7 +177,38 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
         }, 1000); // Animation duration should match the CSS
       }, 5000);
     }
-  }
+
+    // Perform relevant database changes after starring video
+    if (!star) {
+      //Insert using put request
+      // console.log("Insert star")
+      await fetch(`http://localhost:3000/videos/${video.video_id}/star`, {
+        method: "PUT",
+        body: JSON.stringify({
+          video_id: video.video_id,
+          product_id: data.matched_product.product_id,
+          user_id: 1, //hard-coded
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      //Delete using delete request
+      // console.log("Delete star")
+      await fetch(`http://localhost:3000/videos/${video.video_id}/star`, {
+        method: "DELETE",
+        body: JSON.stringify({
+          video_id: video.video_id,
+          product_id: data.matched_product.product_id,
+          user_id: 1, //hard-coded
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  };
 
   // Handles the video click playing and pausing
   const handleVideoClick = () => {
@@ -226,7 +235,9 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
       onClick={handleVideoClick}
     >
       {/* Recommending popup */}
-      {recommended && <Recommended item={productData} animate={animate}/>}
+      {recommended && (
+        <Recommended item={data.matched_product} animate={animate} />
+      )}
 
       <video
         src={`${import.meta.env.VITE_AWSCLOUDFRONT_URL}/${video.video_url}.mp4`}
@@ -256,7 +267,7 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
             {Object.keys(data).length !== 0 ? (
               <p className="text-sm">{data.generic_data.like_count}</p>
             ) : (
-              <p>...</p>
+              <p>0</p>
             )}
           </div>
           <div>
@@ -264,7 +275,7 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
             {Object.keys(data).length !== 0 ? (
               <p className="text-sm">{data.generic_data.comment_count}</p>
             ) : (
-              <p>...</p>
+              <p>0</p>
             )}
           </div>
           <div>
@@ -276,7 +287,7 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
             {Object.keys(data).length !== 0 ? (
               <p className="text-sm">{data.generic_data.save_count}</p>
             ) : (
-              <p>...</p>
+              <p>0</p>
             )}
           </div>
           <div>
@@ -288,7 +299,7 @@ const Tiktok = ({vid, idx, onPause, onEnd}) => {
             {Object.keys(data).length !== 0 ? (
               <p className="text-sm">{data.generic_data.star_count}</p>
             ) : (
-              <p>...</p>
+              <p>0</p>
             )}
           </div>
         </div>
