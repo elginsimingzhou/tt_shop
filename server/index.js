@@ -203,7 +203,7 @@ app.delete("/videos/:video_id/star", async (req, res) => {
     }
     query_text =
       `
-    delete from video_stars where (video_id, product_id, user_id)
+    delete from video_stars where (product_id, user_id)
     = (` +
       params.join(",") +
       `)
@@ -211,7 +211,6 @@ app.delete("/videos/:video_id/star", async (req, res) => {
     `;
     console.log(query_text);
     const response = await pool.query(query_text, [
-      body.video_id,
       body.product_id,
       body.user_id,
     ]);
