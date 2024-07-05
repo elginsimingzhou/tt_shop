@@ -50,8 +50,6 @@ const Shops = () => {
     }
   };
 
-
-
   // Item for each type of content
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -95,7 +93,6 @@ const Shops = () => {
 
   // Fetch product data
   useEffect(() => {
-   
     async function fetchProducts() {
       const response = await fetch("http://localhost:3000/products");
       const fetchedProducts = await response.json();
@@ -105,12 +102,10 @@ const Shops = () => {
       // console.log(JSON.stringify(fetchedProducts));
     }
     fetchProducts();
-    
   }, []);
 
   return (
     <div className="pb-12 bg-white text-black">
-
       {/* Search bar and shopping cart icon */}
       <div className="pt-4 pb-4 flex p-2 space-x-1 items-center">
         <FormControl
@@ -227,33 +222,33 @@ const Shops = () => {
         <CustomTabPanel value={value} index={0}>
           {/* Cards */}
           <div className="grid grid-cols-2 auto-rows-max gap-2">
-            {staredProducts.length !== 0 ? (
+            {staredProducts.length !== 0 &&
               staredProducts.map((product) => {
                 return (
-                  <ShopCardComponent key={product.product_id} product={product} />
+                  <ShopCardComponent
+                    key={product.product_id}
+                    product={product}
+                  />
                 );
-              })
-            ) : (
-              <p>Loading products...</p>
-            )}
-            {watchedProducts.length !== 0 ? (
+              })}
+            {watchedProducts.length !== 0 &&
               watchedProducts.map((product) => {
                 return (
-                  <ShopCardComponent key={product.product_id} product={product} />
+                  <ShopCardComponent
+                    key={product.product_id}
+                    product={product}
+                  />
                 );
-              })
-            ) : (
-              <p>Loading products...</p>
-            )}
-            {remainingProducts.length !== 0 ? (
+              })}
+            {remainingProducts.length !== 0 &&
               remainingProducts.map((product) => {
                 return (
-                  <ShopCardComponent key={product.product_id} product={product} />
+                  <ShopCardComponent
+                    key={product.product_id}
+                    product={product}
+                  />
                 );
-              })
-            ) : (
-              <p></p>
-            )}
+              })}
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>

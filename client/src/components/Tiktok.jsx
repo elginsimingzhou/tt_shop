@@ -199,7 +199,6 @@ const Tiktok = ({ vid, idx, onPause, onEnd }) => {
       await fetch(`http://localhost:3000/videos/${video.video_id}/star`, {
         method: "DELETE",
         body: JSON.stringify({
-          video_id: video.video_id,
           product_id: data.matched_product.product_id,
           user_id: 1, //hard-coded
         }),
