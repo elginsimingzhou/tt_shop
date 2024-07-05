@@ -126,7 +126,8 @@ class Video(Resource):
             keywords = process_video(video_path)
             os.remove(video_path)
         except Exception as e:
-            return {"error": str(e)}, 500
+           return None, 500 
+            
 
         return {"video_id": video_id, "keywords": keywords}, 201
 

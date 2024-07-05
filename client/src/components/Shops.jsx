@@ -102,7 +102,7 @@ const Shops = () => {
       setStaredProducts(fetchedProducts.star_products);
       setWatchedProducts(fetchedProducts.watched_products);
       setRemainingProducts(fetchedProducts.remaining_products);
-      console.log(JSON.stringify(fetchedProducts));
+      // console.log(JSON.stringify(fetchedProducts));
     }
     fetchProducts();
     
@@ -110,18 +110,6 @@ const Shops = () => {
 
   return (
     <div className="pb-12 bg-white text-black">
-      {/* Welcome to Tiktok shop!
-      {products.map((product) => {
-        return (
-          <Link
-            key={product.product_id}
-            to={`/products/${product.product_id}`}
-            // state={product}
-          >
-            <h1>{product.title}</h1>;
-          </Link>
-        );
-      })}  */}
 
       {/* Search bar and shopping cart icon */}
       <div className="pt-4 pb-4 flex p-2 space-x-1 items-center">
@@ -264,7 +252,7 @@ const Shops = () => {
                 );
               })
             ) : (
-              <p>Loading products...</p>
+              <p></p>
             )}
           </div>
         </CustomTabPanel>

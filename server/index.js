@@ -26,7 +26,10 @@ const getOrSetCache = async (key, cb) => {
     }
 
     const freshData = await cb();
-    await client.set(key, JSON.stringify(freshData));
+    if (freshData !== null) {
+      await client.set(key, JSON.stringify(freshData));
+    }
+
     return freshData;
   } catch (err) {
     console.error("Redis error:", err);
@@ -35,46 +38,55 @@ const getOrSetCache = async (key, cb) => {
 };
 
 app.get("/", async (req, res) => {
-  // res.json("Hello world");
   const videos = await pool.query(` 
     select video_id, video_url, thumbnail_url, title, description, videos.created_at, videos.user_id, username 
     from videos
     INNER JOIN users
-    on videos.user_id = users.user_id;
+    on videos.user_id = users.user_id
+    order by video_id;
     `);
-  // console.log('videos pushed');
+  // console.log(JSON.stringify(videos.rows));
+
   res.status(200).json(videos.rows);
 });
 
 //GET: Retrieve specific video and relevant user information, comments, likes,saves, stars
 app.get("/videos/:video_id", async (req, res) => {
-  const { video_id } = req.params;
+  try {
+    const { video_id } = req.params;
 
-  const fetchedKeywords = await getOrSetCache(
-    `keywords/${video_id}`,
-    async () => {
-      const response = await fetch(
-        `${process.env.ML_SERVER_URL}/videos/${video_id}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ video_url: video_id }),
-        }
-      );
-      const fetchedKeywords = await response.json();
-      return fetchedKeywords;
-    }
-  );
+    const fetchedKeywords = await getOrSetCache(
+      `keywords/${video_id}`,
+      async () => {
+        console.log("Fetching from model...");
+        const response = await fetch(
+          `${process.env.ML_SERVER_URL}/videos/${video_id}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ video_url: video_id }),
+          }
+        );
+        const fetchedKeywords = await response.json();
+        return fetchedKeywords;
+      }
+    );
+    // console.log(JSON.stringify(fetchedKeywords))
 
-  let params = [];
-  for (let i = 1; i <= fetchedKeywords.keywords.length; i++) {
-    params.push("$" + i);
-  }
+    let matched_product = {
+      rows: [],
+    };
+    if (fetchedKeywords !== null) {
+      let params = [];
+      for (let i = 1; i <= fetchedKeywords.keywords.length; i++) {
+        params.push("$" + i);
+      }
 
-  const query_text = `
+      const query_text =
+        `
     select products.product_id, title, price, stock, sold_count, image_url, shop_id
     from products 
     inner join (
@@ -83,7 +95,9 @@ app.get("/videos/:video_id", async (req, res) => {
     inner join
     (select *
     from tags
-    where tag_name in (` + params.join(',') + `)) as matched_tags
+    where tag_name in (` +
+        params.join(",") +
+        `)) as matched_tags
     on matched_tags.tag_id = product_tags.tag_id
     group by product_tags.product_id
     order by tags_count desc) as matched_products
@@ -91,13 +105,11 @@ app.get("/videos/:video_id", async (req, res) => {
     limit 1;
     `;
 
-  const matched_product = await pool.query(
-    query_text,
-    fetchedKeywords.keywords
-  );
+      matched_product = await pool.query(query_text, fetchedKeywords.keywords);
+    }
 
-  let generic_data = await pool.query(
-    `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.star_count, 0) as star_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
+    let generic_data = await pool.query(
+      `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.star_count, 0) as star_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
       FROM
           (SELECT video_id, COUNT(like_id) AS like_count
           FROM video_likes
@@ -121,41 +133,122 @@ app.get("/videos/:video_id", async (req, res) => {
           WHERE video_id = $1
           GROUP BY video_id) AS vs
       ON vl.video_id = vs.video_id;`,
-    [video_id]
-  );
+      [video_id]
+    );
 
-  if (generic_data.rows.length === 0) {
-    generic_data = {
-      rows: [
-        {
-          video_id: video_id,
-          like_count: 0,
-          star_count: 0,
-          comment_count: 0,
-          save_count: 0,
-        },
-      ],
-    };
-  }
+    if (generic_data.rows.length === 0) {
+      generic_data = {
+        rows: [
+          {
+            video_id: video_id,
+            like_count: 0,
+            star_count: 0,
+            comment_count: 0,
+            save_count: 0,
+          },
+        ],
+      };
+    }
 
-  const comments = await pool.query(
-    `SELECT username, comment_text
+    const comments = await pool.query(
+      `SELECT username, comment_text
       FROM video_comments
       INNER JOIN users ON video_comments.user_id = users.user_id
       WHERE video_id = $1
       `,
-    [video_id]
-  );
+      [video_id]
+    );
 
-  res.json({
-    generic_data: generic_data.rows[0],
-    comments: comments.rows,
-    matched_product: matched_product.rows[0],
-  });
+    res.status(201).json({
+      generic_data: generic_data.rows[0],
+      comments: comments.rows,
+      matched_product: matched_product.rows[0],
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//PUT: Update user star into database
+app.put("/videos/:video_id/star", async (req, res) => {
+  try {
+    const body = req.body;
+
+    const query_text = `
+    insert into video_stars (video_id, product_id, user_id)
+    values (${body.video_id}, ${body.product_id}, ${body.user_id})
+    on conflict (video_id, product_id, user_id) do nothing
+    returning *;
+    `;
+    console.log(query_text);
+    const response = await pool.query(query_text);
+    if (response) {
+      console.log("Successfully starred product.");
+      res.status(204).json(response.rows[0].star_id);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+//DELETE: DELETE user star into database
+app.delete("/videos/:video_id/star", async (req, res) => {
+  try {
+    const body = req.body;
+
+    let params = [];
+    for (let i = 1; i <= Object.keys(body).length; i++) {
+      params.push("$" + i);
+    }
+    query_text =
+      `
+    delete from video_stars where (video_id, product_id, user_id)
+    = (` +
+      params.join(",") +
+      `)
+    returning *;
+    `;
+    console.log(query_text);
+    const response = await pool.query(query_text, [
+      body.video_id,
+      body.product_id,
+      body.user_id,
+    ]);
+    if (response) {
+      console.log("Star rows successfully deleted");
+      res.status(204).json(response.rows[0].star_id);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
+
+//PUT: Update user duration into database
+app.put("/videos/:video_id/view", async (req, res) => {
+  try {
+    const body = req.body;
+
+    const query_text = `
+    insert into video_views (video_id, user_id, duration)
+    values (${body.video_id}, ${body.user_id}, ${body.duration})
+    on conflict (video_id, user_id) do update
+    set duration = ${body.duration}
+    returning *;
+    `;
+    console.log(query_text);
+    const response = await pool.query(query_text);
+    if (response) {
+      // console.log(response);
+      console.log("Successfully updated view duration.");
+      res.status(204).json(response.rows[0].view_id);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 //GET: Retrieve all products to load TikTok Shop
-
 app.get("/products", async (req, res) => {
   try {
     //Get user_id HARDCODED
@@ -180,8 +273,9 @@ app.get("/products", async (req, res) => {
 
     //Fetch watched products
     const watchedProducts = await pool.query(
-      `SELECT watched_products.*, avg_rating
-       FROM (SELECT products.product_id, title, price, stock, sold_count, image_url, shop_id, video_id, user_id, duration
+      `
+      SELECT watched_products.product_id, title, price, stock, sold_count, image_url, shop_id, user_id, cast(avg(avg_rating) as decimal(2)) as avg_rating, cast(avg(duration) as decimal(2)) as avg_duration
+       FROM (SELECT products.product_id, title, price, stock, sold_count, image_url, shop_id, user_id, duration
                 FROM products
                 INNER JOIN video_views
                 ON products.product_id = video_views.product_id
@@ -194,7 +288,9 @@ app.get("/products", async (req, res) => {
                     FROM product_ratings
                     GROUP BY product_id) AS product_rating
         ON watched_products.product_id = product_rating.product_id
-        ORDER BY duration DESC; `,
+		group by watched_products.product_id, title, price, stock, sold_count, image_url, shop_id, user_id
+        ORDER BY avg_duration DESC;
+      `,
       [user_id]
     );
 
@@ -218,7 +314,7 @@ app.get("/products", async (req, res) => {
           from product_ratings
           group by product_id	) as product_rating
         on remaining_products.product_id = product_rating.product_id
-        order by avg_rating desc NULLS LAST, sold_count desc;;
+        order by sold_count desc, avg_rating desc NULLS LAST;
       `,
       [user_id]
     );
@@ -228,40 +324,6 @@ app.get("/products", async (req, res) => {
       watched_products: watchedProducts.rows,
       remaining_products: remainingProducts.rows,
     });
-
-    // if (starProducts.rows.length === 0 && watchedProducts.rows.length === 0) {
-    //   const rankedProducts = products.rows.sort(
-    //     (a, b) => b.sold_count - a.sold_count
-    //   );
-    //   return res.status(200).json(rankedProducts.slice(0, 5));
-    // } else {
-    //   // Create a ranking map
-    //   const productRanking = new Map();
-
-    //   likedProducts.rows.forEach((row) => {
-    //     productRanking.set(
-    //       row.product_id,
-    //       (productRanking.get(row.product_id) || 0) + 2
-    //     ); //liked products increment 2
-    //   });
-
-    //   // Increment ranking for watched products
-    //   watchedProducts.rows.forEach((row) => {
-    //     productRanking.set(
-    //       row.product_id,
-    //       (productRanking.get(row.product_id) || 0) + 1
-    //     ); //liked products increment 1
-    //   });
-
-    //   // Rank products based on the ranking map
-    //   const rankedProducts = products.rows.sort((a, b) => {
-    //     const rankA = productRanking.get(a.product_id) || 0;
-    //     const rankB = productRanking.get(b.product_id) || 0;
-    //     return rankB - rankA;
-    //   });
-
-    //   res.status(200).json(rankedProducts.slice(0, 5));
-    // }
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: "Internal server error" });
