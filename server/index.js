@@ -69,7 +69,34 @@ app.get("/videos/:video_id", async (req, res) => {
     }
   );
 
-  const generic_data = await pool.query(
+  let params = [];
+  for (let i = 1; i <= fetchedKeywords.keywords.length; i++) {
+    params.push("$" + i);
+  }
+
+  const query_text = `
+    select products.product_id, title, price, stock, sold_count, image_url, shop_id
+    from products 
+    inner join (
+    select product_tags.product_id, count(product_tags.tag_id) as tags_count
+    from product_tags
+    inner join
+    (select *
+    from tags
+    where tag_name in (` + params.join(',') + `)) as matched_tags
+    on matched_tags.tag_id = product_tags.tag_id
+    group by product_tags.product_id
+    order by tags_count desc) as matched_products
+    on products.product_id = matched_products.product_id
+    limit 1;
+    `;
+
+  const matched_product = await pool.query(
+    query_text,
+    fetchedKeywords.keywords
+  );
+
+  let generic_data = await pool.query(
     `SELECT vl.video_id, COALESCE(vl.like_count, 0) as like_count, COALESCE(vf.star_count, 0) as star_count, COALESCE(vc.comment_count, 0) as comment_count, COALESCE(vs.save_count, 0) as save_count
       FROM
           (SELECT video_id, COUNT(like_id) AS like_count
@@ -97,6 +124,20 @@ app.get("/videos/:video_id", async (req, res) => {
     [video_id]
   );
 
+  if (generic_data.rows.length === 0) {
+    generic_data = {
+      rows: [
+        {
+          video_id: video_id,
+          like_count: 0,
+          star_count: 0,
+          comment_count: 0,
+          save_count: 0,
+        },
+      ],
+    };
+  }
+
   const comments = await pool.query(
     `SELECT username, comment_text
       FROM video_comments
@@ -109,17 +150,11 @@ app.get("/videos/:video_id", async (req, res) => {
   res.json({
     generic_data: generic_data.rows[0],
     comments: comments.rows,
-    keywords: fetchedKeywords,
+    matched_product: matched_product.rows[0],
   });
 });
 
 //GET: Retrieve all products to load TikTok Shop
-//Contain recommender system logic
-// app.get("/products", async (req, res) => {
-//   const products = await pool.query("SELECT * FROM products");
-//   // console.log('videos pushed');
-//   res.status(200).json(products.rows);
-// });
 
 app.get("/products", async (req, res) => {
   try {
@@ -163,8 +198,6 @@ app.get("/products", async (req, res) => {
       [user_id]
     );
 
-    
-
     // Fetch rest products
     const remainingProducts = await pool.query(
       `
@@ -188,11 +221,13 @@ app.get("/products", async (req, res) => {
         order by avg_rating desc NULLS LAST, sold_count desc;;
       `,
       [user_id]
-  );
+    );
 
-
-
-    res.status(201).json({"star_products": starProducts.rows, "watched_products": watchedProducts.rows, "remaining_products": remainingProducts.rows})
+    res.status(201).json({
+      star_products: starProducts.rows,
+      watched_products: watchedProducts.rows,
+      remaining_products: remainingProducts.rows,
+    });
 
     // if (starProducts.rows.length === 0 && watchedProducts.rows.length === 0) {
     //   const rankedProducts = products.rows.sort(

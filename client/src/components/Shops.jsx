@@ -202,78 +202,7 @@ const Shops = () => {
       console.log(JSON.stringify(fetchedProducts));
     }
     fetchProducts();
-
-    // I will use placeholder data for now.
-    // const test =
-    // [
-    //   {
-    //     "product_id": 1,
-    //     "shop_id": 3,
-    //     "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "9.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 0,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    //   {
-    //     "product_id": 2,
-    //     "shop_id": 3,
-    //     "title": "Anime Shirt",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "9.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 1800,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    //   {
-    //     "product_id": 3,
-    //     "shop_id": 3,
-    //     "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "9.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 0,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    //   {
-    //     "product_id": 4,
-    //     "shop_id": 3,
-    //     "title": "Anime Shirt",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "12.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 1800,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    //   {
-    //     "product_id": 5,
-    //     "shop_id": 3,
-    //     "title": "[SG Ready Stock] Mini Fast Charging Power Bank With Cable 5000mAh Portable Charger Small Powerbank For iPhone",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "4.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 0,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    //   {
-    //     "product_id": 6,
-    //     "shop_id": 3,
-    //     "title": "Anime Shirt",
-    //     "description": "𝐒𝐏𝐄𝐂𝐈𝐅𝐈𝐂𝐀𝐓𝐈𝐎𝐍:\n▶ Product Type: Mini Power Bank\n▶ Product size: 75*25*40mm\n▶ Product weight: 93g\n▶ Input interface: 5V/2A(Max)\n▶ Output interface: 5V/1-2.4A(Max)\n▶ Battery capacity: 5000mAh\n▶ Storage/transportation temperature: -20℃±50℃\n▶ Certification: Appearance Patent/Quality Inspection\n▶ Report/CE/FCC/ROSH\n▶ Cell type: physical ion cell\n▶ Product colors: black, white, pink, green",
-    //     "price": "2.50",
-    //     "stock": 76,
-    //     "image_url": "3",
-    //     "sold_count": 1800,
-    //     "created_at": "2024-06-25T03:39:34.711Z"
-    //   },
-    // ]
-    // setProducts(test)
+   
   }, []);
 
   return (
