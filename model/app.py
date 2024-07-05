@@ -18,6 +18,9 @@ nltk.download('punkt')
 nltk.download('words')
 nltk.download('wordnet')
 
+#Set tesseract path 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\elgin\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -25,6 +28,7 @@ video_post_args = reqparse.RequestParser()
 video_post_args.add_argument("video_url", type=str, help="Video url is required to generate keywords for video", required = True)
 
 def download_video(url, file_path):
+    print("=== Start video download ===\n")
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         with open(file_path, 'wb') as f:
@@ -32,6 +36,8 @@ def download_video(url, file_path):
                 f.write(chunk)
     else:
         raise Exception(f"Failed to download video from {url}")
+    
+    print("=== End video download ===\n")
 
 def extract_frames(video_path, num_frames=20):
     cap = cv2.VideoCapture(video_path)
@@ -111,8 +117,9 @@ class Home(Resource):
 class Video(Resource):
     def post(self, video_id):
         args = video_post_args.parse_args()
-        video_url = args['video_url']
+        # video_url = args['video_url']
         video_path = f"video_{video_id}.mp4"
+        video_url = f"https://d39w4p5b35gh50.cloudfront.net/{args['video_url']}.mp4"
 
         try:
             download_video(video_url, video_path)
