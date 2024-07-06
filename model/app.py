@@ -11,6 +11,10 @@ from nltk.corpus import stopwords, words, wordnet
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from wordfreq import word_frequency
+from dotenv import load_dotenv
+
+# Load env
+load_dotenv()
 
 # Download necessary NLTK data
 nltk.download('stopwords')
@@ -116,10 +120,11 @@ class Home(Resource):
 
 class Video(Resource):
     def post(self, video_id):
+        AWSCLOUDFRONT_URL = os.getenv('AWSCLOUDFRONT_URL')
         args = video_post_args.parse_args()
         # video_url = args['video_url']
         video_path = f"video_{video_id}.mp4"
-        video_url = f"https://d39w4p5b35gh50.cloudfront.net/{args['video_url']}.mp4"
+        video_url = f"{AWSCLOUDFRONT_URL}/{args['video_url']}.mp4"
 
         try:
             download_video(video_url, video_path)
