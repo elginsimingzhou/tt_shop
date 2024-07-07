@@ -11,17 +11,32 @@ Presenting ShopSmart! A more intuitive, personalized shopping experience that ca
 Our team have chosen the problem statement on “Enhancing Tailored Discovery on TikTok shop”
 
 #  2. Set up, installation and how to run 🏃
-A. (Back-end) On a windows machine, run “wsl.exe --install Ubuntu” to install and run Ubuntu terminal. Install redis and run “redis-server” to start the redis server.
-B. (Back-end) cd to “server” directory, run “npm install” to install dependencies and run “npm run dev” to start the node.js server.
-C. (Back-end) cd to “model” directory, create a new python env and run “pip install -r requirements.txt” to install dependencies. Run “python app.py” to start the model’s flask server.
-D. (Front-end) cd to “client” directory and run “npm run dev”.
-E. Navigate to “http://localhost:5173/” to view the app
+A. (Back-end) On a windows machine, run “wsl.exe --install Ubuntu” to install and run Ubuntu terminal. Install redis and run “redis-server” to start the redis server.<br />
+<br />
+B. (Back-end) cd to “server” directory, run “npm install” to install dependencies and run “npm run dev” to start the node.js server.<br />
+<br />
+C. (Back-end) cd to “model” directory, create a new python env and run “pip install -r requirements.txt” to install dependencies. Run “python app.py” to start the model’s flask server.<br />
+<br />
+D. (Front-end) cd to “client” directory and run “npm run dev”.<br />
+<br />
+E. Navigate to “http://localhost:5173/” to view the app<br />
+<br />
 
 #  3. Features and functionality of ShopSmart 🕺
 
-A. We implemented a new button named “star”. Users will be able to “star” videos that are of their interest and have products in the video or products similar to those in the video recommended to them in the tiktok shop. This provides a seamless shopping experience for users as their tiktok shop will be a direct representation of their personal interest.
+![image](https://github.com/elginsimingzhou/tt_shop/blob/main/Screenshot%20of%20product%20link.png)
+<br />
+## 🌟STAR🌟
+A. We implemented a new button named “star”. Users will be able to “star” videos that are of their interest and have products in the video or products similar to those in the video recommended to them in the tiktok shop. This provides a seamless shopping experience for users as their tiktok shop will be a direct representation of their personal interest.<br />
 
 Watch duration will also impact interests in the product shown in the video. For example, if a user watches for at least 10 seconds, it would be deemed as only a slight interest in the product.
+<br />
+<br />
+## Product showcase while watching🛍️
 
+B. Users who are interested in the product would now be able to view the exact product in the TikTok shop that is showcased in the video. 
 
-B. 
+#  4. Link to Video 📹
+
+<a href="https://youtu.be/aJ0fZkOSlAg">Watch me!</a>
+
